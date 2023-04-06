@@ -51,6 +51,11 @@ namespace Pexeso
             Form1.Instance.Show();
             this.Hide();
         }
-        
+
+
+        private void SettingsForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }

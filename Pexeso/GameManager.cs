@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Pexeso
+﻿namespace Pexeso
 {
     internal class GameManager
     {
 
         private static GameManager _instance = new GameManager();
-        
+
         internal static GameManager Instance { get => _instance; }
         internal Settings Settings { get => settings; }
         internal List<Piece> SelectedPieces { get => selectedPieces; }
@@ -43,7 +34,7 @@ namespace Pexeso
                 players.Add(p.clone());
             });
 
-            actualPlayer = this.players[rd.Next(players.Count)];
+            actualPlayer = players[rd.Next(players.Count)];
 
             cats = RequestManager.Instance.GetCats(settings.Pieces * 2);
             ChangeCat();
@@ -88,7 +79,7 @@ namespace Pexeso
         }
         private void AddPiecesToForm()
         {
-            
+
             foreach (var piece in pieces)
             {
                 piece.AddPiece();
@@ -129,7 +120,7 @@ namespace Pexeso
                     GetActualPlayer().Score += 1;
                     ReloadPlayers();
 
-                    if(pieces.Count == 0)
+                    if (pieces.Count == 0)
                     {
 
                         Win();
@@ -140,7 +131,7 @@ namespace Pexeso
             }
         }
 
-        
+
 
         private void ChangeCat()
         {
@@ -153,20 +144,20 @@ namespace Pexeso
         {
             return selectedPieces.Contains(piece);
         }
-                
+
         public void LoadPlayers()
         {
-            for (int i = 0; i < this.players.Count; i++)
+            for (int i = 0; i < players.Count; i++)
             {
                 if (players[i] == actualPlayer)
                 {
-                    GameForm.Instance.listBox1.Items.Add("Aktuálně hraje: " + this.players[i].Name + " Score: " + this.players[i].Score);
+                    GameForm.Instance.listBox1.Items.Add("Aktuálně hraje: " + players[i].Name + " Score: " + players[i].Score);
                     continue;
                 }
-                GameForm.Instance.listBox1.Items.Add(this.players[i].Name + " Score: " + this.players[i].Score);
+                GameForm.Instance.listBox1.Items.Add(players[i].Name + " Score: " + players[i].Score);
             }
-            
-            
+
+
         }
         public void ReloadPlayers()
         {
@@ -176,9 +167,9 @@ namespace Pexeso
 
         private Player GetActualPlayer()
         {
-            foreach (var player in this.players)
+            foreach (var player in players)
             {
-                if(player == actualPlayer)
+                if (player == actualPlayer)
                 {
                     return player;
                 }
@@ -190,14 +181,14 @@ namespace Pexeso
         {
             for (int i = 0; i < players.Count; i++)
             {
-                if (this.players[i] == actualPlayer)
+                if (players[i] == actualPlayer)
                 {
-                    if (i == this.players.Count - 1)
+                    if (i == players.Count - 1)
                     {
-                        actualPlayer = this.players[0];
+                        actualPlayer = players[0];
                         return;
                     }
-                    actualPlayer = this.players[i + 1];
+                    actualPlayer = players[i + 1];
                     return;
                 }
             }
@@ -205,13 +196,32 @@ namespace Pexeso
 
         private void Win()
         {
-            this.players = players.OrderBy(p => p.Score).ToList();
             GameForm gameForm = GameForm.Instance;
-            gameForm.label1.Text = "Vyhrál/a " + players[players.Count - 1].Name;
-            gameForm.label1.Visible = true;
+            List<Player> winners = GetWinners();
+            string winMessage = "Vyhrál/a ";
+            for (int i = 0; i < winners.Count; i++)
+            {
+                winMessage += winners[i].Name + " ";
+            }
+            MessageBox.Show(winMessage);
             gameForm.button1.Visible = true;
             gameForm.button3.Visible = true;
         }
+
+        private List<Player> GetWinners()
+        {
+            players = players.OrderBy(p => p.Score).ToList();
+            List<Player> winners = new List<Player>();
+            for (int i = 0; i < players.Count; i++)
+            {
+                if (players[i].Score == players[players.Count - 1].Score)
+                {
+                    winners.Add(players[i]);
+                }
+            }
+
+            return winners;
+        }
     }
-    
+
 }

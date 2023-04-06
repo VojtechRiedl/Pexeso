@@ -39,5 +39,11 @@ namespace Pexeso
             this.Close();
             new GameForm().Show();
         }
+
+        private void GameForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
+
+        }
     }
 }
