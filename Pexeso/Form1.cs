@@ -37,5 +37,10 @@ namespace Pexeso
         {
             MessageBox.Show("Ovládání je øešeno klikáním myší. Pokud hráè zvolí nesprávnou dvojici, hraje další hráè. Pokud zvolí správnou dvojici, pokraèuje stejný hráè.");
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }
